@@ -1,27 +1,117 @@
-# participium-team-4
+# Participium 📋
 
-## Deployment Instructions
+<div align="center">
+  <img src="docs/images/logo.jpg" alt="Participium Logo" width="200" height="200"/>
+</div>
 
-This repository contains the **Participium** project with all the required services:
+**Participium** is an integrated platform for managing and monitoring civic participation reports. It enables citizens to report issues, facilitating communication between public administrators and the community.
 
-- Backend (`participium`)
-- Telegram Bot (`telegram_bot`)
-- PostgreSQL Database (`db` and `test_db`)
+---
 
-The project is ready to be run via **Docker Compose** and can be deployed by third parties.
+## 📑 Table of Contents
 
-## Requirements
+- [Getting Started](#-getting-started)
+  - [Access Credentials](#access-credentials)
+  - [User Roles & Permissions](#user-roles--permissions)
+  - [Main Features](#main-features)
+  - [Telegram Bot](#telegram-bot)
+  - [Quick Start](#quick-start)
+- [Technical Setup & Deployment](#-technical-setup--deployment)
+- [For Developers](#-for-developers)
 
-- Docker ≥ 20.x
-- Docker Compose ≥ 2.x
+---
 
-## Quick Start
+## 🎯 Getting Started
+
+### Access Credentials
+
+Use these credentials to access Participium based on your role:
+
+| Role | Username | Email | Password | Access Level |
+|------|----------|-------|----------|--------------|
+| **Citizen** | mneri | mneri@team4.it | citizenTeam4 | ✅ Full |
+| **Technical Officer** | mcurie | mcurie@team4.it | tOfficerTeam4 | ✅ Full |
+| **Public Relations Officer** | arossi | arossi@team4.it | PrOfficerTeam4 | ✅ Full |
+| **External Maintainer** | everdi | everdi@team4.it | extMaintWithTeam4 | ✅ Limited |
+| **Administrator** | admin | - | adminTeam4 | ✅ Full |
+
+### User Roles & Permissions
+
+Each role in Participium has specific rights and responsibilities:
+
+#### 👤 **Citizen**
+- **What you can do:**
+  - ✏️ Create new reports and issues
+  - 👁️ View your reports and their status
+  - 💬 Add notes to your reports
+  - 📲 Receive notifications via Telegram (if connected)
+
+#### 🛠️ **Technical Officer**
+- **What you can do:**
+  - ✅ Approve/Reject technical reports
+  - 👁️ View all pending reports
+  - 📝 Add technical notes
+  - 📊 Manage report classification (category, location)
+
+#### 📢 **Public Relations Officer**
+- **What you can do:**
+  - ✅ Approve/Reject reports for communication
+  - 💌 Manage citizen communication
+  - 📋 View all report statuses
+  - 📝 Fill in decisions and reasoning
+
+#### 🏢 **External Maintainer**
+- **What you can do:**
+  - 👁️ View only assigned reports
+  - 📝 Add technical notes
+  - ✅ Mark completion of actions
+
+#### 🔑 **Administrator**
+- **What you can do:**
+  - 🔧 Configure users and roles
+  - 📊 View global statistics
+  - ⚙️ Manage system settings
+
+### Main Features
+
+#### 📝 Report Creation
+1. Select the **category** of the issue (e.g., "Roads", "Lighting")
+2. Choose the **location** on the map
+3. Add **photos and description**
+4. Submit — the report will be tracked automatically
+
+#### 📊 Status Tracking
+Each report has a clear status:
+- 🟡 **Pending** - Awaiting review
+- 🟢 **Approved** - Accepted, in progress
+- 🔴 **Rejected** - Rejected with reason
+- ✅ **Completed** - Resolved
+
+#### 💬 Notes System
+- Add private comments to reports
+- See all actions taken
+- Track complete history
+
+### Telegram Bot
+
+Connect your Participium account to **Telegram** to receive real-time notifications:
+
+1. Open the Participium Telegram bot
+2. Start the conversation (`/start`)
+3. Link your account
+4. You'll receive notifications when:
+   - ✏️ You create a report
+   - ✅ A report is approved
+   - 🔴 A report is rejected
+   - 💬 You receive a new comment
+
+### Quick Start
 
 1. **Clone the repository**:
 
 ```bash
-git clone https://github.com/SergioM-98/Participium-Team-4.git
-cd Participium-Team-4
+git clone https://github.com/Skeitt/Participium.git
+cd Participium
 ```
 
 2. **Set up environment variables**:
@@ -41,7 +131,7 @@ To use a custom `.env` file (e.g., `.env.prod`):
 docker compose --env-file .env.prod up -d
 ```
 
-4. Verify that the containers are running:
+4. **Verify that the containers are running**:
 
 ```bash
 docker ps
@@ -51,138 +141,204 @@ docker ps
    - Backend: [http://localhost:3000](http://localhost:3000)
    - The Telegram bot will respond to messages if the token is valid.
 
-## User Credentials
+### Available Services
 
-| Username | Email           | Password          | Role                            |
-| -------- | --------------- | ----------------- | ------------------------------- |
-| admin    | -               | adminTeam4        | ADMIN                           |
-| mcurie   | mcurie@team4.it | tOfficerTeam4     | TECHNICAL_OFFICER               |
-| arossi   | arossi@team4.it | PrOfficerTeam4    | PUBLIC_RELATIONS_OFFICER        |
-| everdi   | everdi@team4.it | extMaintWithTeam4 | EXTERNAL_MAINTAINER_WITH_ACCESS |
-| mneri    | mneri@team4.it  | citizenTeam4      | CITIZEN                         |
+| Service | Port | Description |
+|---------|------|-------------|
+| **participium** | 3000 | Web application |
+| **telegram_bot** | - | Bot (isolated environment) |
+| **db** | 5432 | Main Database |
+| **test_db** | 5433 | Test Database |
 
-### Notes
+### Main Environment Variables
 
-- **Admin**: Administrator account enabled to create Officer and External Maintainer accounts
-- **Technical Officer**: Responsible for technical management of reports
-- **Public Relations Officer**: Responsible for reports approval or rejection
-- **External Maintainer With Access**: Has access to Participium
-- **External Maintainer Without Access**: Has no access to Participium
-- **Citizen**: Can create reports
+```env
+# Database
+DATABASE_URL=postgresql://user:password@db:5432/participium
+TEST_DATABASE_URL=postgresql://user:password@test_db:5433/participium_test
 
-## Dockerhub
+# Telegram Bot
+BOT_TOKEN=your_telegram_bot_token_here
+BOT_ADMIN_ID=your_admin_telegram_id
 
-It is also possible to launch the project through Dockerhub, using the commands:
-
-```bash
-docker run -d --name participium --env-file .env -p 3000:3000 skeitt/participium-team-4:latest
-docker run -d --name participium_bot --env-file .env skeitt/participium-team-4-bot:latest
+# Application
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3000
 ```
 
-> Note: Make sure you have a `.env` file in the current directory with all required environment variables before running these commands.
+### Deploy with Docker Hub
 
-## Available Services
+To run Participium using pre-built images from Docker Hub:
 
-| Service      | Local Port | Description   |
-| ------------ | ---------- | ------------- |
-| participium  | 3000       | Main backend  |
-| telegram_bot | -          | Telegram bot  |
-| db           | 5432       | Main Database |
-| test_db      | 5433       | Test Database |
+```bash
+docker run -d --name participium \
+  --env-file .env \
+  -p 3000:3000 \
+  skeitt/participium-team-4:latest
 
-## Important Notes
+docker run -d --name participium_bot \
+  --env-file .env \
+  skeitt/participium-team-4-bot:latest
+```
 
-- Data is persisted via Docker volumes (pgdata and pgdata_test)
-- The backend uses DATABASE_URL to connect to the database
-- End users do not need to build, just run docker compose pull && docker compose up
+> Make sure you have a `.env` file in the current directory with all required variables.
 
-## For Maintainers
+---
 
-### Branch Name Conventions and Workflow
+## 🛠️ Technical Setup & Deployment
 
-When working on an issue, create a branch based on the name of the issue. The usual convention is like this:
+### Technology Stack
 
-`<type>/<issue-number>-<short-description>`
+**Frontend & Backend:**
+- Next.js 14 (App Router)
+- TypeScript
+- Prisma ORM
+- PostgreSQL
 
-where type should be one of the following:
+**Telegram Bot:**
+- Node.js + Telegraf
+- TypeScript
 
-- `feature/` - New features or enhancements
-- `fix/` - Bug fixes
-- `docs/` - Documentation updates
-- `test/` - Branch that implements tests
+**Infrastructure:**
+- Docker & Docker Compose
+- CI/CD with GitHub Actions
 
-The issue number is the ID of the issue assigned by GitHub.
-
-When committing, use this format:
-
-`<type>: <description> #<issue-id>`
-
-This should allow GitHub to track the commits you are making in the project issue.
-
-I report for help the convention of names for the type of commits: https://www.conventionalcommits.org/en/v1.0.0/
-
-The basic workflow should be:
-
-1. **Create branch** - Create a new branch based on the assigned GitHub issue
-2. **Develop** - Work on the branch to resolve the issue requirements
-3. **Create Pull Request** - Start a Pull Request to merge your branch into the standard branch when development is complete
-4. **Request Review** - Assign the reviewer in YouTrack as reviewer for your Pull Request
-5. **Address Feedback** - If the reviewer identifies issues, solve them and notify the reviewer to re-review
-6. **Merge** - Once approved, the reviewer merges the branch into the standard branch. If the reviewer finds other problems, repeat step 5
-7. **Cleanup** - Ensure the branch is deleted after successful merge
-
-Standard branches are:
-
-- `dev` - For `feature/`, `fix/`, `docs/`, and `test/` branches
-- `QA` - For quality assurance and testing
-- `main` - Production-ready code
-
-The merge workflow should be: `dev` → `QA` after a feature or fix is implemented, and after passing all tests, `QA` → `main`
-
-### Folder Structure
+### Project Structure
 
 ```
 participium-team-4/
-├── .github/                  # CI/CD workflows, issue/PR templates
-├── prisma/                   # Prisma: schema.prisma, migrations, seed scripts (contains DB models)
-├── scripts/                  # Utility scripts: migrate, seed, etc.
-├── src/
-│   ├── app/                  # Next.js App Router: pages, layouts, API routes
-│   │   ├── components/       # Reusable React components (UI)
-│   │   └── lib/              # Business & infrastructure layer
-│   │       ├── controllers/  # HTTP orchestration: request mapping → services
-│   │       ├── services/     # Domain logic / use-cases
-│   │       ├── repositories/ # Data access (DB / API abstraction)
-│   │       ├── dtos/         # Zod schemas for input/output validation
-│   │       ├── models/       # Domain/business models (if different from Prisma models)
-│   │       ├── db/           # Prisma client instance and DB connection
-│   │       ├── utils/        # Helpers, logger, generic utilities
-│   │       ├── middlewares/  # Error handling, auth guards, wrappers
-│   │       └── types/        # Global TypeScript types / definitions
-│   └── styles/               # CSS / global styles
-└── tests/                    # test/unit, test/integration, e2e
+├── participium/                # Next.js Frontend + Backend API
+│   ├── src/
+│   │   ├── app/               # Next.js app router
+│   │   ├── components/        # React components
+│   │   ├── lib/
+│   │   │   ├── controllers/   # HTTP controllers
+│   │   │   ├── services/      # Business logic
+│   │   │   ├── repositories/  # Data access
+│   │   │   ├── dtos/          # Zod schemas
+│   │   │   └── utils/         # Utility functions
+│   │   └── types/             # TypeScript types
+│   ├── prisma/
+│   │   ├── schema.prisma      # Database schema
+│   │   └── migrations/        # DB migrations
+│   └── package.json
+│
+├── bot/                        # Telegram Bot
+│   ├── bot.ts                 # Entry point
+│   ├── handlers/              # Command handlers
+│   ├── dtos/                  # DTOs
+│   ├── utils/                 # Utilities
+│   ├── package.json
+│   └── jest.config.js
+│
+├── docker-compose.yml         # Service orchestration
+└── README.md
 ```
 
-### Docker build images
+### Database
 
-To build and push images for both amd64 and arm64 (Apple Silicon, Raspberry Pi, etc.):
+**Managed by Prisma** with automatic migrations:
 
 ```bash
-# Create and use a new builder if you haven't already
+# Generate/apply migrations
+npx prisma migrate dev --name add_feature
+
+# Seed test data
+node prisma/admin.ts
+node prisma/citizen.ts
+
+# View database
+npx prisma studio
+```
+
+Data is persisted via Docker volumes (`pgdata` and `pgdata_test`).
+
+---
+
+## 👨‍💻 For Developers
+
+### Clone and Local Setup
+
+```bash
+git clone https://github.com/Skeitt/Participium.git
+cd Participium
+
+# Install dependencies
+cd participium && npm install && cd ..
+cd bot && npm install && cd ..
+
+# Setup environment
+cp .env.example .env
+# Edit .env with your values
+```
+
+### Development in Watch Mode
+
+```bash
+# Terminal 1: Backend + Frontend (Next.js)
+cd participium
+npm run dev
+
+# Terminal 2: Bot (Telegram)
+cd bot
+npm run dev
+
+# Terminal 3: Database with Prisma Studio
+cd participium
+npx prisma studio
+```
+
+### Testing
+
+```bash
+# Backend API tests
+cd participium
+npm run test
+
+# Bot tests
+cd bot
+npm run test
+
+# Test coverage
+npm run test:coverage
+```
+
+### Production Build
+
+```bash
+# Build Next.js
+cd participium
+npm run build
+npm run start
+
+# Build Bot
+cd bot
+npm run build
+npm start
+```
+
+### Build & Push Docker Images
+
+For multi-platform build (amd64 + arm64):
+
+```bash
+# Setup builder
 docker buildx create --use --name participium-builder
 
-# Build and push the backend image
+# Build backend
 cd participium
-docker buildx build --platform linux/amd64,linux/arm64 -t your_username/participium:latest --push .
-cd ..
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t your_username/participium:latest --push .
 
-# Build and push the bot image
+# Build bot
 cd bot
-docker buildx build --platform linux/amd64,linux/arm64 -t your_username/participium-team-4-bot:latest --push .
-cd ..
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t your_username/participium-team-4-bot:latest --push .
 ```
 
 > Replace `your_username` with your Docker Hub username.
-> The `--push` flag uploads the image directly to Docker Hub for both architectures.
 
-> This README allows anyone to launch the entire system with a single command and without local compilation.
+---
+
+**Last Updated:** March 2026  
+**Repository:** [Skeitt/Participium](https://github.com/Skeitt/Participium)
